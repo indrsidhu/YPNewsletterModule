@@ -1,0 +1,1 @@
+<?phpclass YPController extends Controller{	public $YPStylesheet = true;	}
