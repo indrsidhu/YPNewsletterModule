@@ -61,6 +61,7 @@ class NewsletterGroups extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'newsletterContactLists' => array(self::HAS_MANY, 'NewsletterContactList', 'yp_newsletter_groups_id'),
+			'newsletterTemplate' => array(self::HAS_ONE, 'NewsletterTemplate', 'yp_newsletter_groups_id'),
 		);
 	}
 
