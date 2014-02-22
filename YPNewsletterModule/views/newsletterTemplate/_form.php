@@ -42,6 +42,12 @@ $NewsletterGroups = NewsletterGroups::model()->findByAttributes(array(
 	</div>
 
 	<div class="form-group">
+		<?php echo $form->labelEx($model,'name_from'); ?>
+		<?php echo $form->textField($model,'name_from',array('size'=>45,'maxlength'=>45,'class'=>'form-control')); ?>
+		<?php echo $form->error($model,'name_from'); ?>
+	</div>
+	
+	<div class="form-group">
 		<?php echo $form->labelEx($model,'email_from'); ?>
 		<?php echo $form->textField($model,'email_from',array('size'=>45,'maxlength'=>45,'class'=>'form-control')); ?>
 		<?php echo $form->error($model,'email_from'); ?>
@@ -64,6 +70,12 @@ $NewsletterGroups = NewsletterGroups::model()->findByAttributes(array(
 		<?php //echo $form->error($model,'header'); ?>
 	</div>
 	-->
+	
+	<div class="form-group">
+		<?php echo $form->labelEx($model,'subject'); ?>
+		<?php echo $form->textField($model,'subject',array('size'=>45,'maxlength'=>45,'class'=>'form-control')); ?>
+		<?php echo $form->error($model,'subject'); ?>
+	</div>
 
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'body'); ?>

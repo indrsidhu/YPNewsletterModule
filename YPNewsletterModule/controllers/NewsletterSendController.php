@@ -27,7 +27,7 @@ class NewsletterSendController extends YPController
 	{
 		return array(
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin'),
+				'actions'=>array('admin','view'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -50,4 +50,16 @@ class NewsletterSendController extends YPController
 			'model'=>$model,
 		));
 	}	
+	
+	/**
+	 * Preview mails.
+	 */
+	public function actionView($id)
+	{
+		$model = NewsletterContactList::model()->findByPk($id);
+		$this->render('view',array(
+			'model'=>$model,
+		));
+	}	
+	
 }

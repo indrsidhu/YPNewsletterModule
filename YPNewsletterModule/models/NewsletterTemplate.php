@@ -8,12 +8,13 @@
  * @property string $yp_newsletter_groups_id
  * @property string $name
  * @property string $email_from
- * @property string $header
+ * @property string $name_from
+ * @property string $subject
  * @property string $body
- * @property string $footer
  * @property string $create
  * @property string $updated
  * @property integer $is_active
+ * @property string $schedule_date
  *
  * The followings are the available model relations:
  * @property NewsletterGroups $ypNewsletterGroups
@@ -46,14 +47,14 @@ class NewsletterTemplate extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('yp_newsletter_groups_id, name, email_from, body', 'required'),
+			array('yp_newsletter_groups_id, name, email_from, name_from, subject, body', 'required'),
 			array('is_active', 'numerical', 'integerOnly'=>true),
 			array('yp_newsletter_groups_id', 'length', 'max'=>10),
-			array('name, email_from', 'length', 'max'=>45),
-			array('header, footer, create, updated', 'safe'),
+			array('name, email_from, name_from, subject', 'length', 'max'=>45),
+			array('create, updated, schedule_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, yp_newsletter_groups_id, name, email_from, header, body, footer, create, updated, is_active', 'safe', 'on'=>'search'),
+			array('id, yp_newsletter_groups_id, name, email_from, name_from, subject, body, create, updated, is_active, schedule_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -79,12 +80,13 @@ class NewsletterTemplate extends CActiveRecord
 			'yp_newsletter_groups_id' => 'Yp Newsletter Groups',
 			'name' => 'Name',
 			'email_from' => 'Email From',
-			'header' => 'Header',
+			'name_from' => 'Name From',
+			'subject' => 'Subject',
 			'body' => 'Body',
-			'footer' => 'Footer',
 			'create' => 'Create',
 			'updated' => 'Updated',
 			'is_active' => 'Is Active',
+			'schedule_date' => 'Schedule Date',
 		);
 	}
 
@@ -103,12 +105,13 @@ class NewsletterTemplate extends CActiveRecord
 		$criteria->compare('yp_newsletter_groups_id',$this->yp_newsletter_groups_id,true);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('email_from',$this->email_from,true);
-		$criteria->compare('header',$this->header,true);
+		$criteria->compare('name_from',$this->name_from,true);
+		$criteria->compare('subject',$this->subject,true);
 		$criteria->compare('body',$this->body,true);
-		$criteria->compare('footer',$this->footer,true);
 		$criteria->compare('create',$this->create,true);
 		$criteria->compare('updated',$this->updated,true);
 		$criteria->compare('is_active',$this->is_active);
+		$criteria->compare('schedule_date',$this->schedule_date,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

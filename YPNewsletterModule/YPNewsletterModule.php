@@ -4,13 +4,14 @@ class YPNewsletterModule extends CWebModule
 {
 	public function init()
 	{
+		Yii::setPathOfAlias('plugin', dirname(__FILE__));
 		// this method is called when the module is being created
 		// you may place code here to customize the module or the application
 
 		// import the module-level models and components
 		$this->setImport(array(
-			'ext.yiiplugins.YPNewsletterModule.models.*',
-			'ext.yiiplugins.YPNewsletterModule.components.*',
+			'plugin.models.*',
+			'plugin.components.*',
 		));
 	}
 
@@ -18,46 +19,16 @@ class YPNewsletterModule extends CWebModule
 	{
 		if(parent::beforeControllerAction($controller, $action))
 		{
-			$this->config($controller, $action);
-			$this->sendtNewsletter(1);
+			YPModule::config($controller, $action);
+			//$arr = $this->getNewsletter(1);// for contact list id = 1
+			//$this->sendMail($arr);
+			
 			// this method is called before any module controller action is performed
 			// you may place customized code here
 			return true;
 		}
 		else
 			return false;
-	}
-	
-	
-	function config($controller, $action){
-	
-		/*
-		$assets = dirname(__FILE__).'/assets';
-		$baseUrl = Yii::app()->assetManager->publish($assets);
-		Yii::app()->clientScript->registerCssFile($baseUrl.'/YPStyle.css');	
-		*/
-	
-		/**
-		 * Style and Layout Settings
-		 */	
-		 
-		// If you are using bootstrap or your own stylesheet set this false, 
-		$controller->YPStylesheet = true; // true|false
-		 
-		switch($action->id)
-		{
-			case 'admin':
-			$controller->layout = 'application.modules.admin.views.layouts.admin';
-			break;
-			case 'create':
-			$controller->layout = 'application.modules.admin.views.layouts.admin';
-			break;
-			case 'update':
-			$controller->layout = 'application.modules.admin.views.layouts.admin';
-			break;
-			case 'view':
-			break;
-		}	
 	}
 	
 	
@@ -68,16 +39,13 @@ class YPNewsletterModule extends CWebModule
 			return false;
 		}
 		
-		$header = nl2br(CHtml::value($model,'header'));
 		$body 	= nl2br(CHtml::value($model,'body'));
-		$footer = nl2br(CHtml::value($model,'footer'));
 		
 		$email_header = $this->includeFIle('email_header',array(
-		'subject'=>'sdsa',
+		'subject'=>CHtml::value($model,'subject'),
 		));
 		$email_footer = $this->includeFIle('email_footer',array(
 		));
-		
 		
 		$html = '';
 		$html .= $email_header;
@@ -119,54 +87,71 @@ class YPNewsletterModule extends CWebModule
 	}
 	
 	
-	function sendtNewsletter($NewsletterContactListId){
+	function getNewsletter($NewsletterContactListId){
 		$status = $this->getSendStatus($NewsletterContactListId);
-		if($status=='Active'){
-			$model = NewsletterContactList::model()->findByPk($NewsletterContactListId);
-			
-			$templateId = CHtml::value($model,'ypNewsletterGroups.newsletterTemplate.id');
-			echo $this->getTemplate($templateId);
-			die();	
+		
+		$model = NewsletterContactList::model()->findByPk($NewsletterContactListId);
+		
+		$templateId = CHtml::value($model,'ypNewsletterGroups.newsletterTemplate.id');
+
+		$template = $this->getTemplate($templateId);
+		$data 	  = unserialize(CHtml::value($model,'data_attributes_data'));
+		
+		
+		foreach($data as $key=>$val){
+			$template = str_replace('{{'.$key.'}}',$val,$template);	
 		}
+
+		$subject = CHtml::value($model,'ypNewsletterGroups.newsletterTemplate.subject');
+		$emailFrom = CHtml::value($model,'ypNewsletterGroups.newsletterTemplate.email_from');
+		$nameFrom = CHtml::value($model,'ypNewsletterGroups.newsletterTemplate.name_from');
+		
+		$arr = array();
+		foreach($data as $key=>$val){
+			$subject = str_replace('{{'.$key.'}}',$val,$subject);
+		}
+		
+		$arr['status'] 		= $status;
+		$arr['subject'] 	= $subject;
+		$arr['toEmail'] 	= $data['email'];
+		$arr['fromEmail'] 	= $emailFrom;
+		$arr['fromName'] 	= $nameFrom;
+		$arr['body'] 		= $template;
+		
+		return $arr;
+		
 	}
 	
 	
 
 	public function sendMail($arr){
 	
-		$subject = $arr['subject'];
-		$fromEmail = $arr['fromEmail'];
-		$fromName = $arr['fromName'];
-		$newsletterId = $arr['newsletterId'];
-		
-		$email_header = $this->includeFIle('newsletter_header',array(
-		'subject'=>$subject,
-		));
-		$email_footer = $this->includeFIle('newsletter_footer',array(
-		));
-		
-		$body = $email_header.$email_body.$email_footer;
-		
-		$mailer = Yii::createComponent('application.extensions.mailer.EMailer');
-		$mailer->Host = "localhost";
-		$mailer->Port = "25";
-		
-		$mailer->IsHTML();
-		$mailer->From = $fromEmail;
-		$mailer->AddAddress($toEmail);
-		$mailer->FromName = $fromName;
-		$mailer->CharSet = 'UTF-8';
-		$mailer->Subject = $subject;
-		$mailer->Body = $body;
-		
-		if($mailer->Send()){
-			return true;
-		} else{
-			//$mailer->ErrorInfo;
-			return false;
+		if($arr['status']=='Active'){
+			$subject	= $arr['subject'];
+			$toEmail	= $arr['toEmail'];
+			$fromEmail	= $arr['fromEmail'];
+			$fromName	= $arr['fromName'];
+			$body		= $arr['body'];
+			
+			$mailer = Yii::createComponent('application.extensions.mailer.EMailer');
+			$mailer->Host = "localhost";
+			$mailer->Port = "25";
+			
+			$mailer->IsHTML();
+			$mailer->From = $fromEmail;
+			$mailer->AddAddress($toEmail);
+			$mailer->FromName = $fromName;
+			$mailer->CharSet = 'UTF-8';
+			$mailer->Subject = $subject;
+			$mailer->Body = $body;
+			
+			if($mailer->Send()){
+				return true;
+			} else{
+				//$mailer->ErrorInfo;
+				return false;
+			}
 		}
-		
-		
-	}	
+	}// EOF send mail
 	
 }
