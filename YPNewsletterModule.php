@@ -60,8 +60,8 @@ class YPNewsletterModule extends CWebModule
 		$criteria = new CDbCriteria();
 		//$criteria->with=array('ypNewsletterGroups');
 		$criteria->join =' 
-		INNER JOIN {{newsletter_groups}} as ypNewsletterGroups ON (t.yp_newsletter_groups_id=ypNewsletterGroups.id) 
-		INNER JOIN {{newsletter_template}} as newsletterTemplate ON  (ypNewsletterGroups.id=newsletterTemplate.yp_newsletter_groups_id)
+		INNER JOIN '.NewsletterContactList::tableName().' as ypNewsletterGroups ON (t.yp_newsletter_groups_id=ypNewsletterGroups.id) 
+		INNER JOIN '.NewsletterTemplate::tableName().' as newsletterTemplate ON  (ypNewsletterGroups.id=newsletterTemplate.yp_newsletter_groups_id)
 		';
 		$criteria->condition = 't.is_active=1 AND ypNewsletterGroups.is_active=1 AND newsletterTemplate.is_active=1';
 		$criteria->compare('t.id',$NewsletterContactListId);
