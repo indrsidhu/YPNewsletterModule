@@ -20,6 +20,7 @@ class YPNewsletterModule extends CWebModule
 		if(parent::beforeControllerAction($controller, $action))
 		{
 			YPModule::config($controller, $action);
+			//$this->cron();
 			//$arr = $this->getNewsletter(1);// for contact list id = 1
 			//$this->sendMail($arr);
 			
@@ -60,7 +61,7 @@ class YPNewsletterModule extends CWebModule
 		$criteria = new CDbCriteria();
 		//$criteria->with=array('ypNewsletterGroups');
 		$criteria->join =' 
-		INNER JOIN '.NewsletterContactList::tableName().' as ypNewsletterGroups ON (t.yp_newsletter_groups_id=ypNewsletterGroups.id) 
+		INNER JOIN '.NewsletterGroups::tableName().' as ypNewsletterGroups ON (t.yp_newsletter_groups_id=ypNewsletterGroups.id) 
 		INNER JOIN '.NewsletterTemplate::tableName().' as newsletterTemplate ON  (ypNewsletterGroups.id=newsletterTemplate.yp_newsletter_groups_id)
 		';
 		$criteria->condition = 't.is_active=1 AND ypNewsletterGroups.is_active=1 AND newsletterTemplate.is_active=1';
@@ -77,10 +78,10 @@ class YPNewsletterModule extends CWebModule
 	
 		$class = get_class(Yii::app());
 		if($class=="CConsoleApplication"){
-			$file = Yii::getPathOfAlias('ext.yiiplugins.YPNewsletterModule.views.mailTemplate.'.$filename).'.php';
+			$file = Yii::getPathOfAlias('plugin.views.mailTemplate.'.$filename).'.php';
 			$html = CConsoleCommand::renderFile($file,$arr,true,false);
 		} else{
-			$file = 'ext.yiiplugins.YPNewsletterModule.views.mailTemplate.'.$filename;
+			$file = 'plugin.views.mailTemplate.'.$filename;
 			$html = Yii::app()->controller->renderPartial($file,$arr,true,false);
 		}
 		return $html;
@@ -133,7 +134,7 @@ class YPNewsletterModule extends CWebModule
 			$fromName	= $arr['fromName'];
 			$body		= $arr['body'];
 			
-			$mailer = Yii::createComponent('application.extensions.mailer.EMailer');
+			$mailer = Yii::createComponent('plugin.extensions.mailer.EMailer');
 			$mailer->Host = "localhost";
 			$mailer->Port = "25";
 			
@@ -148,10 +149,47 @@ class YPNewsletterModule extends CWebModule
 			if($mailer->Send()){
 				return true;
 			} else{
-				//$mailer->ErrorInfo;
 				return false;
 			}
 		}
 	}// EOF send mail
+	
+	function cron(){
+		// On every trigger it will shoot 10 mails,
+		// set trigger via cron every 1 minutes is good
+		/*
+		1. Join contacts with schedule date
+		2. if status is active and date schedule is went in past and entery not exist in log
+		3. shoot a mail
+		*/
+		
+		$criteria = new CDbCriteria;
+		$criteria->select = 't.id';
+		$criteria->join =' 
+		INNER JOIN '.NewsletterGroups::tableName().' as ypNewsletterGroups ON (t.yp_newsletter_groups_id=ypNewsletterGroups.id) 
+		INNER JOIN '.NewsletterTemplate::tableName().' as newsletterTemplate ON  (ypNewsletterGroups.id=newsletterTemplate.yp_newsletter_groups_id) 
+		LEFT JOIN '.NewsletterLog::tableName().' AS newsletterLog ON (newsletterLog.yp_newsletter_contact_list_id=t.id)
+		';
+		$criteria->condition = '(t.is_active=1 AND ypNewsletterGroups.is_active=1 AND newsletterTemplate.is_active=1)';
+		$criteria->condition .= ' AND newsletterTemplate.schedule_date <= NOW()';
+		$criteria->condition .= ' AND (newsletterLog.yp_newsletter_contact_list_id!=t.id OR newsletterLog.yp_newsletter_contact_list_id IS NULL)';
+		$criteria->limit=10; 	
+		$data = NewsletterContactList::model()->findAll($criteria);
+		
+		if(count($data)>0){
+			foreach($data as $data){
+				$contactId = $data->id;
+				$arr = $this->getNewsletter($contactId);
+				if($this->sendMail($arr)){
+					$model = new NewsletterLog();
+					$model->created = new CDbExpression('NOW()');
+					$model->yp_newsletter_contact_list_id = $contactId;
+					$model->save();
+				}
+			}
+		}
+		
+	}
+	
 	
 }

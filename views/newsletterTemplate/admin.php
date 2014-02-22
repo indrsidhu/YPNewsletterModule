@@ -10,6 +10,7 @@
 		//'yp_newsletter_groups_id',
 		'name',
 		'email_from',
+		'schedule_date',
 		//'header',
 		//'body',
 		/*

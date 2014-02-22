@@ -40,6 +40,22 @@ $NewsletterGroups = NewsletterGroups::model()->findByAttributes(array(
 		<?php echo $form->textField($model,'name',array('size'=>45,'maxlength'=>45,'class'=>'form-control','disabled'=>true)); ?>
 		<?php echo $form->error($model,'name'); ?>
 	</div>
+	
+	<div class="form-group">
+		<?php echo $form->labelEx($model,'schedule_date'); ?>
+		<?php Yii::import('plugin.extensions.CJuiDateTimePicker.CJuiDateTimePicker');
+            $this->widget('CJuiDateTimePicker',array(
+                'model'=>$model, //Model object
+                'attribute'=>'schedule_date', //attribute name
+                'mode'=>'datetime', //use "time","date" or "datetime" (default)
+                'options'=>array("dateFormat"=>'yy-mm-dd','timeFormat'=>'hh:mm:ss tt'), // jquery plugin options
+                'language' => '',
+				'htmlOptions'=>array('class'=>'form-control')
+            ));
+        ?>		
+		<?php echo $form->error($model,'schedule_date'); ?>
+	</div>
+	
 
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'name_from'); ?>
