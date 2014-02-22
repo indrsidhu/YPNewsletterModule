@@ -30,7 +30,7 @@ class NewsletterGroups extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{newsletter_groups}}';
+		return 'yp_newsletter_groups';
 	}
 
 	/**

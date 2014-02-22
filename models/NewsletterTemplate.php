@@ -36,7 +36,7 @@ class NewsletterTemplate extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{newsletter_template}}';
+		return 'yp_newsletter_template';
 	}
 
 	/**

@@ -30,7 +30,7 @@ class NewsletterContactList extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{newsletter_contact_list}}';
+		return 'yp_newsletter_contact_list';
 	}
 
 	/**
