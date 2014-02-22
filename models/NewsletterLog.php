@@ -28,7 +28,7 @@ class NewsletterLog extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{newsletter_log}}';
+		return 'yp_newsletter_log';
 	}
 
 	/**

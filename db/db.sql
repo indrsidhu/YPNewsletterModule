@@ -1,7 +1,6 @@
 ---------------------------------------------------------------------
 -- BEFORE BEGINING REPLACE yiiplugins WITH your current database name
 ---------------------------------------------------------------------
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
@@ -64,6 +63,23 @@ CREATE  TABLE IF NOT EXISTS `yiiplugins`.`yp_newsletter_template` (
   CONSTRAINT `fk_yp_newsletter_template_yp_newsletter_groups1`
     FOREIGN KEY (`yp_newsletter_groups_id` )
     REFERENCES `yiiplugins`.`yp_newsletter_groups` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiiplugins`.`yp_newsletter_log`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `yiiplugins`.`yp_newsletter_log` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `created` DATETIME NULL ,
+  `yp_newsletter_contact_list_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_yp_newsletter_log_yp_newsletter_contact_list1` (`yp_newsletter_contact_list_id` ASC) ,
+  CONSTRAINT `fk_yp_newsletter_log_yp_newsletter_contact_list1`
+    FOREIGN KEY (`yp_newsletter_contact_list_id` )
+    REFERENCES `yiiplugins`.`yp_newsletter_contact_list` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
