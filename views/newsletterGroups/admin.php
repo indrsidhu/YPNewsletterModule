@@ -1,6 +1,6 @@
 <div class="container">
 <h1>Manage Newsletter Groups</h1>
-<?php $this->widget('ext.yiiplugins.YPNewsletterModule.components.YPMenuWidget'); ?>
+<?php $this->widget('YPMenuWidget'); ?>
 <p>
 Groups are a great tool for organizing the subscribers for your list for targeted communication.<br />
 Subscribers can join groups when they sign up for your newsletter, or you can set up in your coding, when someone register  will automatically enter into Newsletter contact list under one of group you will create here.

@@ -1,6 +1,6 @@
 <div class="container">
 	<h1>Newsletter Management</h1>
-	<?php $this->widget('ext.yiiplugins.YPNewsletterModule.components.YPMenuWidget'); ?>
+	<?php $this->widget('YPMenuWidget'); ?>
 	
 	<div>
 	<h3>Groups Created  : <?php echo NewsletterGroups::model()->count(); ?></h3>

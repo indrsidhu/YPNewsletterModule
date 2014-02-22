@@ -1,6 +1,6 @@
 <div class="container">
 <h1>Manage Newsletter Templates</h1>
-<?php $this->widget('ext.yiiplugins.YPNewsletterModule.components.YPMenuWidget'); ?>
+<?php $this->widget('YPMenuWidget'); ?>
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'newsletter-template-grid',
 	'dataProvider'=>$model->search(),

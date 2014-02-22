@@ -1,7 +1,6 @@
 <div class="container">
 <h1>View NewsletterTemplate #<?php echo $model->id; ?></h1>
-<?php $this->widget('ext.yiiplugins.YPNewsletterModule.components.YPMenuWidget'); ?>
-
+<?php $this->widget('YPMenuWidget'); ?>
 <?php echo Yii::app()->getModule('newsletter')->getTemplate($model->id); ?>
 
 <?php /* $this->widget('zii.widgets.CDetailView', array(
