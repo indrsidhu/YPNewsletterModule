@@ -56,6 +56,7 @@ class NewsletterSendController extends YPController
 	 */
 	public function actionView($id)
 	{
+		$this->layout = false;
 		$model = NewsletterContactList::model()->findByPk($id);
 		$this->render('view',array(
 			'model'=>$model,

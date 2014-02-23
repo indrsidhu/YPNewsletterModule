@@ -42,6 +42,7 @@ class NewsletterTemplateController extends YPController
 	 */
 	public function actionView($id)
 	{
+		$this->layout = false;
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));

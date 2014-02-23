@@ -6,7 +6,7 @@
 		* also you can use controller/action to apply layout for specific page only
 		**/
 		'layout'=>array(
-			array('create','application.modules.admin.views.layouts.admin'),
+			array('','application.modules.admin.views.layouts.admin'),
 		),
 		'params'=>array(
 			'siteName'=>'Example.com',
