@@ -29,7 +29,7 @@
 		),
 		array(
 		'header'=>'Log',
-		'value'=>'CHtml::encode("N/A")',
+		'value'=>'getLogCount($data->id)',
 		'htmlOptions'=>array('style'=>'text-align:center')
 		),
 		array(
@@ -45,3 +45,12 @@
 
 </div>
 
+
+<?php
+function getLogCount($id){
+	$criteria = new CDbCriteria;
+	$criteria->compare('t.yp_newsletter_contact_list_id',$id);
+	$res = NewsletterLog::model()->count($criteria);
+	return $res;
+}
+?>
