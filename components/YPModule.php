@@ -12,7 +12,7 @@ class YPModule{
 		$config = self::$config;
 		
 		if(empty($config)){
-			$PluginPath = Yii::getPathOfAlias('plugin');
+			$PluginPath = Yii::getPathOfAlias('YPNewsletterModule');
 			$config = include($PluginPath.'/config.php');
 			self::$config = $config;
 		}

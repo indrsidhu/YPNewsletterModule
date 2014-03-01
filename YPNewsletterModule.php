@@ -4,14 +4,14 @@ class YPNewsletterModule extends CWebModule
 {
 	public function init()
 	{
-		Yii::setPathOfAlias('plugin', dirname(__FILE__));
+		Yii::setPathOfAlias('YPNewsletterModule', dirname(__FILE__));
 		// this method is called when the module is being created
 		// you may place code here to customize the module or the application
 
 		// import the module-level models and components
 		$this->setImport(array(
-			'plugin.models.*',
-			'plugin.components.*',
+			'YPNewsletterModule.models.*',
+			'YPNewsletterModule.components.*',
 		));
 	}
 
@@ -78,10 +78,10 @@ class YPNewsletterModule extends CWebModule
 	
 		$class = get_class(Yii::app());
 		if($class=="CConsoleApplication"){
-			$file = Yii::getPathOfAlias('plugin.views.mailTemplate.'.$filename).'.php';
+			$file = Yii::getPathOfAlias('YPNewsletterModule.views.mailTemplate.'.$filename).'.php';
 			$html = CConsoleCommand::renderFile($file,$arr,true,false);
 		} else{
-			$file = 'plugin.views.mailTemplate.'.$filename;
+			$file = 'YPNewsletterModule.views.mailTemplate.'.$filename;
 			$html = Yii::app()->controller->renderPartial($file,$arr,true,false);
 		}
 		return $html;
@@ -134,7 +134,7 @@ class YPNewsletterModule extends CWebModule
 			$fromName	= $arr['fromName'];
 			$body		= $arr['body'];
 			
-			$mailer = Yii::createComponent('plugin.extensions.mailer.EMailer');
+			$mailer = Yii::createComponent('YPNewsletterModule.extensions.mailer.EMailer');
 			$mailer->Host = "localhost";
 			$mailer->Port = "25";
 			

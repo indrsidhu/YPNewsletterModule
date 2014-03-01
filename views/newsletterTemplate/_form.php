@@ -43,7 +43,7 @@ $NewsletterGroups = NewsletterGroups::model()->findByAttributes(array(
 	
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'schedule_date'); ?>
-		<?php Yii::import('plugin.extensions.CJuiDateTimePicker.CJuiDateTimePicker');
+		<?php Yii::import('YPNewsletterModule.extensions.CJuiDateTimePicker.CJuiDateTimePicker');
             $this->widget('CJuiDateTimePicker',array(
                 'model'=>$model, //Model object
                 'attribute'=>'schedule_date', //attribute name
