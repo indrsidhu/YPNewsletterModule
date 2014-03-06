@@ -191,5 +191,31 @@ class YPNewsletterModule extends CWebModule
 		
 	}
 	
+	/*
+	$arr = array(
+	'groupId'=>5,
+	'name'=>'John',
+	'age'=>'34'
+	);
+	*/
+	
+	function createContact($arr){
+	
+		$model=new NewsletterContactList;
+		$model->yp_newsletter_groups_id = $arr['groupId'];
+		$model->created = new CDbExpression('NOW()');
+		$model->updated = new CDbExpression('NOW()');
+		$model->is_active = 1;
+
+		$dataArr = NewsletterGroups::setDataArr($arr,$arr['groupId']);
+		$model->data_attributes_data = serialize($dataArr);
+
+		if($model->save()){
+			return true;
+		} else{
+		return false;
+		}
+	}
+	
 	
 }
