@@ -1,1 +1,3 @@
-<?phpclass YPController extends Controller{} 
+<?php
+class YPController extends Controller{
+} 
