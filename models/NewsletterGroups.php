@@ -130,7 +130,9 @@ class NewsletterGroups extends CActiveRecord
 
 		$dataArr = array();
 		foreach($fields as $field){
+			if(isset($arr[trim($field)])){
 			$dataArr[trim($field)] = $arr[trim($field)];
+			}
 		}		
 		return $dataArr;
 	}

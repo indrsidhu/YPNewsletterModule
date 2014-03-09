@@ -31,6 +31,7 @@ class YPMenuWidget extends CWidget{
 				array('label'=>'Create contact', 'url'=>array('/newsletter/newsletterContactList/create'),'active'=>(Yii::app()->controller->action->id=='create') ? true : false),
 				array('label'=>'Update', 'url'=>'','active'=>(Yii::app()->controller->action->id=='update') ? true : false,'visible'=>(Yii::app()->controller->action->id=='update') ? true : false),
 				array('label'=>'View', 'url'=>'','active'=>(Yii::app()->controller->action->id=='view') ? true : false,'visible'=>(Yii::app()->controller->action->id=='view') ? true : false),
+				array('label'=>'Import CSV', 'url'=>array('/newsletter/newsletterContactList/importcsv'),'active'=>(Yii::app()->controller->action->id=='importcsv') ? true : false),
 			);	
 			break;
 			case 'newsletterTemplate':

@@ -27,7 +27,7 @@ class NewsletterContactListController extends YPController
 	{
 		return array(
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('index','view','create','update','admin','delete'),
+				'actions'=>array('index','view','create','update','admin','delete','importcsv'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -184,4 +184,59 @@ class NewsletterContactListController extends YPController
 			Yii::app()->end();
 		}
 	}
+	
+	public function actionImportcsv(){
+	
+		$model=new YPNewsletterImportCsv;
+		
+        if(isset($_POST['YPNewsletterImportCsv']))
+        {
+            $model->attributes=$_POST['YPNewsletterImportCsv'];
+            $model->csvfile=CUploadedFile::getInstance($model,'csvfile');
+            if($model->validate())
+            {
+				$tmpName = $model->csvfile->tempName;
+				if(($handle = fopen($tmpName, 'r')) !== FALSE) {
+					// necessary if a large csv file
+					set_time_limit(0);
+					$postArr = array();
+					$fields = array();
+					while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+					
+						if(empty($fields)){
+						$fields = $data;
+						} else{
+							$i=0;
+							foreach($fields as $filed){
+								$postArr[$filed] = $data[$i];
+								$i++;
+							}
+						}
+						
+						if(!empty($postArr)){
+							$groupId = Yii::app()->getRequest()->getQuery('groupId');
+							$postArr = NewsletterGroups::setDataArr($postArr,$groupId);
+							
+							$NewsletterContactList = new NewsletterContactList;
+							$NewsletterContactList->yp_newsletter_groups_id = $groupId;
+							$NewsletterContactList->created = new CDbExpression('NOW()');
+							$NewsletterContactList->updated = new CDbExpression('NOW()');
+							$dataArr = NewsletterGroups::setDataArr($postArr,$groupId);
+							$NewsletterContactList->data_attributes_data = serialize($dataArr);
+							$NewsletterContactList->save();
+						}
+					}
+					fclose($handle);
+				}
+				
+				$this->redirect(array('admin'));
+                // redirect to success page
+            }
+        }	
+		$this->render('importcsv',array(
+		'model'=>$model
+		));	
+	}
+	
+	
 }
