@@ -29,7 +29,7 @@
 				<table id="header" cellpadding="10" cellspacing="0" align="center" bgcolor="8fb3e9">
 					<tr>
 						<td width="570" bgcolor="eaeaea">
-						<h1><img src="<?php echo Yii::app()->getBaseUrl(true); ?>/images/logo.png" alt="Logo" ></h1></td>
+						<h1><img src="<?php echo Yii::app()->createAbsoluteUrl('/'); ?>/images/logo.png" alt="Logo" ></h1></td>
 					</tr>
 					<tr>
 						<td width="70%" bgcolor="B4B4B4" ><h2 style="color:#ffffff!important"><?php echo $subject; ?></h2></td>
